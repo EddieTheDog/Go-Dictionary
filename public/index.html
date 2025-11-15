@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#4CAF50">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <title>Go Dictionary</title>
+</head>
+<body>
+  <!-- ============================= -->
+  <!-- Install Instructions Section -->
+  <!-- ============================= -->
+  <div id="install-page" style="display:none">
+    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; text-align:center; padding:2em; background: linear-gradient(135deg, #4CAF50, #81C784); color:white; font-family:Arial, sans-serif;">
+      <div style="font-size:5em; margin-bottom:0.5em; animation:bounce 2s infinite;">📚</div>
+      <h1 style="font-size:2.5em; margin-bottom:1em; text-shadow:1px 1px 3px rgba(0,0,0,0.2);">Install Go Dictionary</h1>
+      <p id="ios-instructions" style="display:none; font-size:1.2em; line-height:1.5em; margin-bottom:1em;">
+        Tap the <strong>Share</strong> button at the bottom of your screen, then select <strong>Add to Home Screen</strong>.
+      </p>
+      <p id="android-instructions" style="display:none; font-size:1.2em; line-height:1.5em; margin-bottom:1em;">
+        Tap the <strong>Menu</strong> button in your browser, then select <strong>Add to Home Screen</strong>.
+      </p>
+      <p id="desktop-instructions" style="display:none; font-size:1.2em; line-height:1.5em; margin-bottom:1em;">
+        Open this site on your mobile device to install it as an app.
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================= -->
+  <!-- Go Dictionary App Section -->
+  <!-- ============================= -->
+  <div id="app-page" style="display:none">
+    <header>
+      <h1>Go Dictionary</h1>
+      <p id="install-msg"></p>
+    </header>
+
+    <main>
+      <input type="text" id="searchWord" placeholder="Search a word...">
+      <button id="searchBtn">Search</button>
+      <div id="result"></div>
+      <button id="viewPlaylists">My Playlists</button>
+    </main>
+
+    <script src="src/dictionary.js"></script>
+    <script src="src/playlist.js"></script>
+  </div>
+
+  <!-- ============================= -->
+  <!-- Scripts -->
+  <!-- ============================= -->
+  <script>
+    // ========== Bounce Animation Keyframes ==========
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // ========== Detect Device / Standalone ==========
+    const ua = navigator.userAgent;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+    if (isStandalone) {
+      document.getElementById('app-page').style.display = 'block';
+    } else {
+      document.getElementById('install-page').style.display = 'block';
+      if (/iPhone|iPad|iPod/.test(ua)) {
+        document.getElementById('ios-instructions').style.display = 'block';
+      } else if (/Android/.test(ua)) {
+        document.getElementById('android-instructions').style.display = 'block';
+      } else {
+        document.getElementById('desktop-instructions').style.display = 'block';
+      }
+    }
+
+    // ========== Service Worker ==========
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(() => console.log('Service Worker registered'));
+      });
+    }
+
+    // ========== App JS ==========
+    if (isStandalone) {
+      // Search button
+      document.getElementById('searchBtn').addEventListener('click', async () => {
+        const word = document.getElementById('searchWord').value.trim();
+        if (!word) return;
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = 'Searching...';
+        try {
+          const data = await getWord(word); // from dictionary.js
+          displayWordResult(data, resultDiv); // from dictionary.js
+        } catch (err) {
+          resultDiv.innerHTML = 'Word not found.';
+        }
+      });
+
+      // View playlists
+      document.getElementById('viewPlaylists').addEventListener('click', () => {
+        window.location.href = 'playlist.html';
+      });
+    }
+  </script>
+</body>
+</html>
