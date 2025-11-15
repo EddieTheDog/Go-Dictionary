@@ -26,7 +26,6 @@ if (typeof io !== 'undefined') {
             window.location.reload();
         }
 
-        // Example: trigger a custom function
         if (data === 'trigger-custom') {
             alert('Custom function triggered!');
         }
