@@ -1,0 +1,8 @@
+body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; color: #333; }
+header { background: #4CAF50; color: white; padding: 1em; text-align: center; }
+h1 { margin: 0; }
+main { padding: 1em; }
+input, button { padding: 0.5em; margin: 0.5em 0; }
+button { cursor: pointer; background: #4CAF50; color: white; border: none; border-radius: 5px; }
+button:hover { background: #45a049; }
+.playlist { background: #e0ffe0; padding: 0.5em; margin: 0.5em 0; border-radius: 5px; }
