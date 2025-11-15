@@ -1,121 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#4CAF50">
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="styles.css">
-  <title>Go Dictionary</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#4CAF50">
+<title>Go Dictionary</title>
+<style>
+  html, body { margin:0; padding:0; height:100%; width:100%; overflow:hidden; }
+  iframe { border:none; width:100%; height:100%; }
+</style>
 </head>
 <body>
 
-  <!-- ============================= -->
-  <!-- Install Instructions Section -->
-  <!-- ============================= -->
-  <div id="install-page" style="display:none">
-    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; text-align:center; padding:2em; background: linear-gradient(135deg, #4CAF50, #81C784); color:white; font-family:Arial, sans-serif;">
-      <div style="font-size:5em; margin-bottom:0.5em; animation:bounce 2s infinite;">📚</div>
-      <h1 style="font-size:2.5em; margin-bottom:1em; text-shadow:1px 1px 3px rgba(0,0,0,0.2);">Install Go Dictionary</h1>
-      <p id="ios-instructions" style="display:none; font-size:1.2em; line-height:1.5em; margin-bottom:1em;">
-        Tap the <strong>Share</strong> button at the bottom of your screen, then select <strong>Add to Home Screen</strong>.
-      </p>
-      <p id="android-instructions" style="display:none; font-size:1.2em; line-height:1.5em; margin-bottom:1em;">
-        Tap the <strong>Menu</strong> button in your browser, then select <strong>Add to Home Screen</strong>.
-      </p>
-      <p id="desktop-instructions" style="display:none; font-size:1.2em; line-height:1.5em; margin-bottom:1em;">
-        Go Dictionary is only available on mobile devices or iPad. Please open this site on your phone or tablet.
-      </p>
-    </div>
-  </div>
+<div id="container"></div>
 
-  <!-- ============================= -->
-  <!-- Go Dictionary App Section -->
-  <!-- ============================= -->
-  <div id="app-page" style="display:none">
-    <!-- Begin old dictionary app HTML -->
+<script>
+  const ua = navigator.userAgent;
+  const isMobile = /iPhone|iPad|iPod|Android/.test(ua);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  const container = document.getElementById('container');
 
-    <header>
-      <h1>Go Dictionary</h1>
-      <p id="install-msg"></p>
-    </header>
-
-    <main>
-      <input type="text" id="searchWord" placeholder="Search a word...">
-      <button id="searchBtn">Search</button>
-      <div id="result"></div>
-      <button id="viewPlaylists">My Playlists</button>
-    </main>
-
-    <script src="src/dictionary.js"></script>
-    <script src="src/playlist.js"></script>
-    <!-- End old dictionary app HTML -->
-  </div>
-
-  <!-- ============================= -->
-  <!-- Scripts -->
-  <!-- ============================= -->
-  <script>
-    // Bounce animation for instructions icon
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-15px); }
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Device detection
-    const ua = navigator.userAgent;
-    const isMobile = /iPhone|iPad|iPod|Android/.test(ua);
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-
-    if (isStandalone && isMobile) {
-      // Show dictionary app
-      document.getElementById('app-page').style.display = 'block';
-    } else {
-      // Show instructions page
-      document.getElementById('install-page').style.display = 'block';
-      if (/iPhone|iPad|iPod/.test(ua)) {
-        document.getElementById('ios-instructions').style.display = 'block';
-      } else if (/Android/.test(ua)) {
-        document.getElementById('android-instructions').style.display = 'block';
-      } else {
-        document.getElementById('desktop-instructions').style.display = 'block';
-      }
-    }
-
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(() => console.log('Service Worker registered'));
-      });
-    }
-
-    // Dictionary app functionality (only if running standalone)
-    if (isStandalone && isMobile) {
-      document.getElementById('searchBtn').addEventListener('click', async () => {
-        const word = document.getElementById('searchWord').value.trim();
-        if (!word) return;
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = 'Searching...';
-        try {
-          const data = await getWord(word); // from dictionary.js
-          displayWordResult(data, resultDiv); // from dictionary.js
-        } catch (err) {
-          resultDiv.innerHTML = 'Word not found.';
-        }
-      });
-
-      document.getElementById('viewPlaylists').addEventListener('click', () => {
-        window.location.href = 'playlist.html';
-      });
-    }
-  </script>
+  if (!isMobile) {
+    // Desktop
+    container.innerHTML = `
+      <div style="display:flex; justify-content:center; align-items:center; height:100vh; text-align:center; font-family:Arial, sans-serif; background:#4CAF50; color:white;">
+        <p style="font-size:1.5em;">Go Dictionary is only available on mobile devices or iPad. Please open this site on your phone or tablet.</p>
+      </div>`;
+  } else if (isStandalone) {
+    // Mobile home screen → load the app
+    const iframe = document.createElement('iframe');
+    iframe.src = 'app.html';
+    container.appendChild(iframe);
+  } else {
+    // Mobile browser → load instructions
+    const iframe = document.createElement('iframe');
+    iframe.src = 'instructions.html';
+    container.appendChild(iframe);
+  }
+</script>
 
 </body>
 </html>
