@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Go Dictionary Admin</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 2em; }
+  button { padding: 0.7em 1.5em; margin: 0.5em 0; cursor: pointer; display:block; width:100%; max-width:300px; }
+</style>
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+  <button onclick="sendCommand('clear-local-storage')">Clear Local Storage</button>
+  <button onclick="sendCommand('clear-cookies')">Clear Cookies</button>
+  <button onclick="sendCommand('show-instructions')">Show Instructions Page</button>
+  <button onclick="sendCommand('reload-page')">Reload Page for All Users</button>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  function sendCommand(command) {
+    socket.emit('admin-command', command);
+    console.log('Sent command:', command);
+  }
+</script>
+</body>
+</html>
