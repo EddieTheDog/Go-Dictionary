@@ -25,13 +25,20 @@
 <textarea id="announcementMessage" placeholder="Type your announcement here"></textarea>
 <button id="sendAnnouncementBtn">Send Announcement</button>
 
-<!-- Socket.io CDN (remove integrity) -->
+<!-- Socket.io CDN (removed integrity) -->
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // Make sure Socket.io loaded
+    if (typeof io === 'undefined') {
+        console.error('Socket.io failed to load. Admin commands will not work.');
+        return;
+    }
+
     const socket = io();
 
+    // Command functions
     function sendCommand(command) {
         socket.emit('admin-command', command);
         console.log('Sent command:', command);
@@ -43,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Announcement sent!');
     }
 
-    // Bind buttons
+    // Attach buttons
     document.getElementById('clearLocal').addEventListener('click', () => sendCommand('clear-local-storage'));
     document.getElementById('clearCookies').addEventListener('click', () => sendCommand('clear-cookies'));
     document.getElementById('showInstructions').addEventListener('click', () => sendCommand('show-instructions'));
