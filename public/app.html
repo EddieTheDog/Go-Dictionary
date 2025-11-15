@@ -31,11 +31,19 @@
   <button id="viewPlaylists">My Playlists</button>
 </main>
 
-<script src="src/dictionary.js"></script>
-<script src="src/playlist.js"></script>
-<script src="/socket.io/socket.io.js"></script>
+<!-- Socket.io CDN -->
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"
+        integrity="sha384-Vu/1rK3x/6F+vHk8QXGqj7G+Mk2hR3hhAFn3JYVvy2BjTh+jc3rgVXJ39wVnDQ6K"
+        crossorigin="anonymous"></script>
+
+<!-- Client command listener -->
 <script src="client-command.js"></script>
 
+<!-- Dictionary and playlist scripts -->
+<script src="src/dictionary.js"></script>
+<script src="src/playlist.js"></script>
+
+<!-- Main app script -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   if ('serviceWorker' in navigator) {
