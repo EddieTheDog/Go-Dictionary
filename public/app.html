@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#4CAF50">
   <title>Go Dictionary</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* Body & Background */
     body {
       margin: 0;
       font-family: 'Arial', sans-serif;
@@ -20,7 +20,6 @@
       min-height: 100vh;
     }
 
-    /* Header */
     header {
       width: 100%;
       padding: 1em;
@@ -29,13 +28,8 @@
       text-align: center;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
-    header h1 {
-      margin: 0;
-      font-size: 2em;
-      letter-spacing: 1px;
-    }
+    header h1 { margin: 0; font-size: 2em; letter-spacing: 1px; }
 
-    /* Main Container */
     main {
       width: 90%;
       max-width: 500px;
@@ -45,7 +39,6 @@
       align-items: center;
     }
 
-    /* Search Input */
     #searchWord {
       width: 100%;
       padding: 0.75em 1em;
@@ -57,7 +50,6 @@
       outline: none;
     }
 
-    /* Search Button */
     #searchBtn {
       padding: 0.7em 1.5em;
       font-size: 1em;
@@ -70,11 +62,8 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
       transition: 0.2s;
     }
-    #searchBtn:hover {
-      background: #45a049;
-    }
+    #searchBtn:hover { background: #45a049; }
 
-    /* Result Card */
     #result {
       width: 100%;
       padding: 1em;
@@ -86,7 +75,6 @@
       word-wrap: break-word;
     }
 
-    /* Playlist Button */
     #viewPlaylists {
       padding: 0.7em 1.5em;
       font-size: 1em;
@@ -98,9 +86,7 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
       transition: 0.2s;
     }
-    #viewPlaylists:hover {
-      background: #66bb6a;
-    }
+    #viewPlaylists:hover { background: #66bb6a; }
   </style>
 </head>
 <body>
@@ -121,32 +107,36 @@
 <script src="src/playlist.js"></script>
 
 <script>
-  // Register service worker
+document.addEventListener('DOMContentLoaded', () => {
+  // Service Worker
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(() => console.log('Service Worker registered'));
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(() => console.log('Service Worker registered'));
+  }
+
+  const searchBtn = document.getElementById('searchBtn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', async () => {
+      const word = document.getElementById('searchWord').value.trim();
+      if (!word) return;
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = 'Searching...';
+      try {
+        const data = await getWord(word); // dictionary.js
+        displayWordResult(data, resultDiv); // dictionary.js
+      } catch (err) {
+        resultDiv.innerHTML = 'Word not found.';
+      }
     });
   }
 
-  // Search functionality
-  document.getElementById('searchBtn').addEventListener('click', async () => {
-    const word = document.getElementById('searchWord').value.trim();
-    if (!word) return;
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = 'Searching...';
-    try {
-      const data = await getWord(word); // dictionary.js
-      displayWordResult(data, resultDiv); // dictionary.js
-    } catch (err) {
-      resultDiv.innerHTML = 'Word not found.';
-    }
-  });
-
-  // View playlists
-  document.getElementById('viewPlaylists').addEventListener('click', () => {
-    window.location.href = 'playlist.html';
-  });
+  const playlistBtn = document.getElementById('viewPlaylists');
+  if (playlistBtn) {
+    playlistBtn.addEventListener('click', () => {
+      window.location.href = 'playlist.html';
+    });
+  }
+});
 </script>
 
 </body>
