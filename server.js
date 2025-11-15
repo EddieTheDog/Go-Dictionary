@@ -1,34 +1,18 @@
-const express = require('express');
-const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
-
-const PORT = process.env.PORT || 3000;
-
-// Serve static files
-app.use(express.static('public'));
-
-// Handle socket connections
-io.on('connection', (socket) => {
-    console.log('User connected:', socket.id);
-
-    // Admin commands
-    socket.on('admin-command', (data) => {
-        console.log('Admin command:', data);
-
-        // Broadcast command to all users except sender (admin)
-        socket.broadcast.emit('execute-command', data);
-    });
-
-    // Admin announcements
-    socket.on('admin-announcement', (message) => {
-        console.log('Admin announcement:', message);
-        socket.broadcast.emit('show-announcement', message);
-    });
-
-    socket.on('disconnect', () => {
-        console.log('User disconnected:', socket.id);
-    });
-});
-
-http.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Dictionary</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Go Dictionary</h1>
+        <input type="text" id="searchInput" placeholder="Type a word...">
+        <button id="searchBtn">Search</button>
+        <div id="result"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
