@@ -11,6 +11,7 @@
   <title>Go Dictionary</title>
 </head>
 <body>
+
   <!-- ============================= -->
   <!-- Install Instructions Section -->
   <!-- ============================= -->
@@ -25,7 +26,7 @@
         Tap the <strong>Menu</strong> button in your browser, then select <strong>Add to Home Screen</strong>.
       </p>
       <p id="desktop-instructions" style="display:none; font-size:1.2em; line-height:1.5em; margin-bottom:1em;">
-        Open this site on your mobile device to install it as an app.
+        Go Dictionary is only available on mobile devices or iPad. Please open this site on your phone or tablet.
       </p>
     </div>
   </div>
@@ -34,6 +35,8 @@
   <!-- Go Dictionary App Section -->
   <!-- ============================= -->
   <div id="app-page" style="display:none">
+    <!-- Begin old dictionary app HTML -->
+
     <header>
       <h1>Go Dictionary</h1>
       <p id="install-msg"></p>
@@ -48,13 +51,14 @@
 
     <script src="src/dictionary.js"></script>
     <script src="src/playlist.js"></script>
+    <!-- End old dictionary app HTML -->
   </div>
 
   <!-- ============================= -->
   <!-- Scripts -->
   <!-- ============================= -->
   <script>
-    // ========== Bounce Animation Keyframes ==========
+    // Bounce animation for instructions icon
     const style = document.createElement('style');
     style.innerHTML = `
       @keyframes bounce {
@@ -64,13 +68,16 @@
     `;
     document.head.appendChild(style);
 
-    // ========== Detect Device / Standalone ==========
+    // Device detection
     const ua = navigator.userAgent;
+    const isMobile = /iPhone|iPad|iPod|Android/.test(ua);
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
-    if (isStandalone) {
+    if (isStandalone && isMobile) {
+      // Show dictionary app
       document.getElementById('app-page').style.display = 'block';
     } else {
+      // Show instructions page
       document.getElementById('install-page').style.display = 'block';
       if (/iPhone|iPad|iPod/.test(ua)) {
         document.getElementById('ios-instructions').style.display = 'block';
@@ -81,7 +88,7 @@
       }
     }
 
-    // ========== Service Worker ==========
+    // Register service worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js')
@@ -89,9 +96,8 @@
       });
     }
 
-    // ========== App JS ==========
-    if (isStandalone) {
-      // Search button
+    // Dictionary app functionality (only if running standalone)
+    if (isStandalone && isMobile) {
       document.getElementById('searchBtn').addEventListener('click', async () => {
         const word = document.getElementById('searchWord').value.trim();
         if (!word) return;
@@ -105,11 +111,11 @@
         }
       });
 
-      // View playlists
       document.getElementById('viewPlaylists').addEventListener('click', () => {
         window.location.href = 'playlist.html';
       });
     }
   </script>
+
 </body>
 </html>
