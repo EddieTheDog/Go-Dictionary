@@ -5,19 +5,30 @@ const io = require('socket.io')(http);
 
 const PORT = process.env.PORT || 3000;
 
+// Serve static files
 app.use(express.static('public'));
 
+// Handle socket connections
 io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
+    console.log('User connected:', socket.id);
 
-  socket.on('admin-command', (data) => {
-    console.log('Admin command:', data);
-    socket.broadcast.emit('execute-command', data);
-  });
+    // Admin commands
+    socket.on('admin-command', (data) => {
+        console.log('Admin command:', data);
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
-  });
+        // Broadcast command to all users except sender (admin)
+        socket.broadcast.emit('execute-command', data);
+    });
+
+    // Admin announcements
+    socket.on('admin-announcement', (message) => {
+        console.log('Admin announcement:', message);
+        socket.broadcast.emit('show-announcement', message);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+    });
 });
 
 http.listen(PORT, () => console.log(`Server running on port ${PORT}`));
