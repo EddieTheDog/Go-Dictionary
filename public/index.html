@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Go Dictionary">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <title>Go Dictionary</title>
+</head>
+<body>
+  <header>
+    <h1>Go Dictionary</h1>
+    <p id="install-msg"></p>
+  </header>
+
+  <main>
+    <input type="text" id="searchWord" placeholder="Search a word...">
+    <button id="searchBtn">Search</button>
+    <div id="result"></div>
+    <button id="viewPlaylists">My Playlists</button>
+  </main>
+
+  <script src="../src/app.js"></script>
+  <script src="../src/dictionary.js"></script>
+  <script src="../src/playlist.js"></script>
+</body>
+</html>
