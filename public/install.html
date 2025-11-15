@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#4CAF50">
+  <link rel="manifest" href="manifest.json">
+  <title>Install Go Dictionary</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #4CAF50;
+      color: white;
+      text-align: center;
+      overflow: hidden; /* hides scrollbars */
+    }
+    .instructions {
+      padding: 2em;
+    }
+    h1 { font-size: 2em; margin-bottom: 1em; }
+    p { font-size: 1.2em; line-height: 1.5em; }
+  </style>
+</head>
+<body>
+  <div class="instructions">
+    <h1>Install Go Dictionary</h1>
+    <p id="ios-instructions" style="display:none">
+      Tap the <strong>Share</strong> button at the bottom of your screen, then select <strong>Add to Home Screen</strong>.
+    </p>
+    <p id="android-instructions" style="display:none">
+      Tap the <strong>Menu</strong> button in your browser, then select <strong>Add to Home Screen</strong>.
+    </p>
+    <p id="desktop-instructions" style="display:none">
+      Open this site on your mobile device to install it as an app.
+    </p>
+  </div>
+
+  <script>
+    // Detect platform and show instructions
+    const ua = navigator.userAgent;
+    if (/iPhone|iPad|iPod/.test(ua)) {
+      document.getElementById('ios-instructions').style.display = 'block';
+    } else if (/Android/.test(ua)) {
+      document.getElementById('android-instructions').style.display = 'block';
+    } else {
+      document.getElementById('desktop-instructions').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
