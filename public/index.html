@@ -16,40 +16,49 @@
 <body>
   <div id="container"></div>
 
-  <script src="/socket.io/socket.io.js"></script>
+  <!-- Socket.io CDN -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"
+          integrity="sha384-Vu/1rK3x/6F+vHk8QXGqj7G+Mk2hR3hhAFn3JYVvy2BjTh+jc3rgVXJ39wVnDQ6K"
+          crossorigin="anonymous"></script>
+
+  <!-- Client command listener -->
   <script src="client-command.js"></script>
+
+  <!-- Main script -->
   <script>
-    function getDeviceType() {
-      const ua = navigator.userAgent || navigator.vendor || window.opera;
-      if (/(Macintosh;.*Mac OS X.*Version\/[\d\.]+.*Mobile)/.test(ua)) return 'ios';
-      if (/iPad/.test(ua)) return 'ios';
-      if (/iPhone|iPod/.test(ua)) return 'ios';
-      if (/Android/.test(ua)) return 'android';
-      return 'desktop';
-    }
+  document.addEventListener('DOMContentLoaded', () => {
+      function getDeviceType() {
+          const ua = navigator.userAgent || navigator.vendor || window.opera;
+          if (/(Macintosh;.*Mac OS X.*Version\/[\d\.]+.*Mobile)/.test(ua)) return 'ios';
+          if (/iPad/.test(ua)) return 'ios';
+          if (/iPhone|iPod/.test(ua)) return 'ios';
+          if (/Android/.test(ua)) return 'android';
+          return 'desktop';
+      }
 
-    function isStandalone() {
-      return (window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
-    }
+      function isStandalone() {
+          return (window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+      }
 
-    const deviceType = getDeviceType();
-    const standalone = isStandalone();
-    const container = document.getElementById('container');
+      const deviceType = getDeviceType();
+      const standalone = isStandalone();
+      const container = document.getElementById('container');
 
-    if (deviceType === 'desktop') {
-      container.innerHTML = `
-        <div style="display:flex; justify-content:center; align-items:center; height:100vh; text-align:center; font-family:Arial, sans-serif; background:#4CAF50; color:white;">
-          <p style="font-size:1.5em;">Go Dictionary is only available on mobile devices or iPad. Please open this site on your phone or tablet.</p>
-        </div>`;
-    } else if (standalone) {
-      const iframe = document.createElement('iframe');
-      iframe.src = 'app.html';
-      container.appendChild(iframe);
-    } else {
-      const iframe = document.createElement('iframe');
-      iframe.src = 'instructions.html';
-      container.appendChild(iframe);
-    }
+      if (deviceType === 'desktop') {
+          container.innerHTML = `
+            <div style="display:flex; justify-content:center; align-items:center; height:100vh; text-align:center; font-family:Arial, sans-serif; background:#4CAF50; color:white;">
+              <p style="font-size:1.5em;">Go Dictionary is only available on mobile devices or iPad. Please open this site on your phone or tablet.</p>
+            </div>`;
+      } else if (standalone) {
+          const iframe = document.createElement('iframe');
+          iframe.src = 'app.html';
+          container.appendChild(iframe);
+      } else {
+          const iframe = document.createElement('iframe');
+          iframe.src = 'instructions.html';
+          container.appendChild(iframe);
+      }
+  });
   </script>
 </body>
 </html>
