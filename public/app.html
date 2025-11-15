@@ -1,59 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#4CAF50">
-  <title>Go Dictionary</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#4CAF50">
+<title>Go Dictionary</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body style="font-family:Arial, sans-serif; margin:0; padding:0; background:#f5f5f5; display:flex; flex-direction:column; align-items:center;">
 
-  <header style="width:100%; padding:1em; background:#4CAF50; color:white; text-align:center;">
-    <h1>Go Dictionary</h1>
-    <p id="install-msg"></p>
-  </header>
+<header style="width:100%; padding:1em; background:#4CAF50; color:white; text-align:center;">
+  <h1>Go Dictionary</h1>
+  <p id="install-msg"></p>
+</header>
 
-  <main style="width:90%; max-width:500px; margin-top:2em; display:flex; flex-direction:column; align-items:center;">
-    <input type="text" id="searchWord" placeholder="Search a word..." style="width:100%; padding:0.5em; font-size:1em; margin-bottom:1em;">
-    <button id="searchBtn" style="padding:0.5em 1em; font-size:1em; margin-bottom:1em; cursor:pointer;">Search</button>
-    <div id="result" style="width:100%; padding:1em; min-height:50px; background:white; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-bottom:1em;"></div>
-    <button id="viewPlaylists" style="padding:0.5em 1em; font-size:1em; cursor:pointer;">My Playlists</button>
-  </main>
+<main style="width:90%; max-width:500px; margin-top:2em; display:flex; flex-direction:column; align-items:center;">
+  <input type="text" id="searchWord" placeholder="Search a word..." style="width:100%; padding:0.5em; font-size:1em; margin-bottom:1em;">
+  <button id="searchBtn" style="padding:0.5em 1em; font-size:1em; margin-bottom:1em; cursor:pointer;">Search</button>
+  <div id="result" style="width:100%; padding:1em; min-height:50px; background:white; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); margin-bottom:1em;"></div>
+  <button id="viewPlaylists" style="padding:0.5em 1em; font-size:1em; cursor:pointer;">My Playlists</button>
+</main>
 
-  <!-- Include your existing dictionary and playlist scripts -->
-  <script src="src/dictionary.js"></script>
-  <script src="src/playlist.js"></script>
+<script src="src/dictionary.js"></script>
+<script src="src/playlist.js"></script>
 
-  <script>
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(() => console.log('Service Worker registered'));
-      });
-    }
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').then(() => console.log('Service Worker registered'));
+  });
+}
 
-    // Search button event
-    document.getElementById('searchBtn').addEventListener('click', async () => {
-      const word = document.getElementById('searchWord').value.trim();
-      if (!word) return;
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = 'Searching...';
-      try {
-        const data = await getWord(word); // dictionary.js
-        displayWordResult(data, resultDiv); // dictionary.js
-      } catch (err) {
-        resultDiv.innerHTML = 'Word not found.';
-      }
-    });
+document.getElementById('searchBtn').addEventListener('click', async () => {
+  const word = document.getElementById('searchWord').value.trim();
+  if (!word) return;
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = 'Searching...';
+  try {
+    const data = await getWord(word); // dictionary.js
+    displayWordResult(data, resultDiv); // dictionary.js
+  } catch (err) {
+    resultDiv.innerHTML = 'Word not found.';
+  }
+});
 
-    // View playlists button
-    document.getElementById('viewPlaylists').addEventListener('click', () => {
-      window.location.href = 'playlist.html';
-    });
-  </script>
+document.getElementById('viewPlaylists').addEventListener('click', () => {
+  window.location.href = 'playlist.html';
+});
+</script>
+
 </body>
 </html>
