@@ -15,35 +15,46 @@
 <h1>Admin Dashboard</h1>
 
 <h2>Commands</h2>
-<button onclick="sendCommand('clear-local-storage')">Clear Local Storage</button>
-<button onclick="sendCommand('clear-cookies')">Clear Cookies</button>
-<button onclick="sendCommand('show-instructions')">Show Instructions Page</button>
-<button onclick="sendCommand('reload-page')">Reload Page for All Users</button>
-<button onclick="sendCommand('trigger-custom')">Trigger Custom Function</button>
+<button id="clearLocal">Clear Local Storage</button>
+<button id="clearCookies">Clear Cookies</button>
+<button id="showInstructions">Show Instructions Page</button>
+<button id="reloadPage">Reload Page for All Users</button>
+<button id="triggerCustom">Trigger Custom Function</button>
 
 <h2>Send Announcement</h2>
 <textarea id="announcementMessage" placeholder="Type your announcement here"></textarea>
-<button onclick="sendAnnouncement()">Send Announcement</button>
+<button id="sendAnnouncementBtn">Send Announcement</button>
 
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"
-        integrity="sha384-Vu/1rK3x/6F+vHk8QXGqj7G+Mk2hR3hhAFn3JYVvy2BjTh+jc3rgVXJ39wVnDQ6K"
-        crossorigin="anonymous"></script>
+<!-- Socket.io CDN (remove integrity) -->
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const socket = io();
 
-    window.sendCommand = function(command) {
+    function sendCommand(command) {
         socket.emit('admin-command', command);
         console.log('Sent command:', command);
     }
 
-    window.sendAnnouncement = function() {
-        const msg = document.getElementById('announcementMessage').value.trim();
-        if (!msg) return;
-        socket.emit('admin-announcement', msg);
-        document.getElementById('announcementMessage').value = '';
+    function sendAnnouncement(message) {
+        if (!message) return;
+        socket.emit('admin-announcement', message);
         alert('Announcement sent!');
     }
+
+    // Bind buttons
+    document.getElementById('clearLocal').addEventListener('click', () => sendCommand('clear-local-storage'));
+    document.getElementById('clearCookies').addEventListener('click', () => sendCommand('clear-cookies'));
+    document.getElementById('showInstructions').addEventListener('click', () => sendCommand('show-instructions'));
+    document.getElementById('reloadPage').addEventListener('click', () => sendCommand('reload-page'));
+    document.getElementById('triggerCustom').addEventListener('click', () => sendCommand('trigger-custom'));
+
+    document.getElementById('sendAnnouncementBtn').addEventListener('click', () => {
+        const msg = document.getElementById('announcementMessage').value.trim();
+        sendAnnouncement(msg);
+        document.getElementById('announcementMessage').value = '';
+    });
 });
 </script>
 </body>
