@@ -5,25 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Go Dictionary Admin</title>
 <style>
-  body { font-family: Arial, sans-serif; padding: 2em; }
-  button { padding: 0.7em 1.5em; margin: 0.5em 0; cursor: pointer; display:block; width:100%; max-width:300px; }
+    body { font-family: Arial, sans-serif; padding: 2em; max-width: 400px; margin:auto; }
+    button, input, textarea { width: 100%; margin: 0.5em 0; padding: 0.7em; font-size: 1em; border-radius: 8px; border: 1px solid #ccc; }
+    button { background: #4CAF50; color: white; border: none; cursor: pointer; }
+    button:hover { background: #45a049; }
 </style>
 </head>
 <body>
-  <h1>Admin Dashboard</h1>
-  <button onclick="sendCommand('clear-local-storage')">Clear Local Storage</button>
-  <button onclick="sendCommand('clear-cookies')">Clear Cookies</button>
-  <button onclick="sendCommand('show-instructions')">Show Instructions Page</button>
-  <button onclick="sendCommand('reload-page')">Reload Page for All Users</button>
+<h1>Admin Dashboard</h1>
 
-<script src="/socket.io/socket.io.js"></script>
+<h2>Commands</h2>
+<button onclick="sendCommand('clear-local-storage')">Clear Local Storage</button>
+<button onclick="sendCommand('clear-cookies')">Clear Cookies</button>
+<button onclick="sendCommand('show-instructions')">Show Instructions Page</button>
+<button onclick="sendCommand('reload-page')">Reload Page for All Users</button>
+<button onclick="sendCommand('trigger-custom')">Trigger Custom Function</button>
+
+<h2>Send Announcement</h2>
+<textarea id="announcementMessage" placeholder="Type your announcement here"></textarea>
+<button onclick="sendAnnouncement()">Send Announcement</button>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"
+        integrity="sha384-Vu/1rK3x/6F+vHk8QXGqj7G+Mk2hR3hhAFn3JYVvy2BjTh+jc3rgVXJ39wVnDQ6K"
+        crossorigin="anonymous"></script>
 <script>
-  const socket = io();
+document.addEventListener('DOMContentLoaded', () => {
+    const socket = io();
 
-  function sendCommand(command) {
-    socket.emit('admin-command', command);
-    console.log('Sent command:', command);
-  }
+    window.sendCommand = function(command) {
+        socket.emit('admin-command', command);
+        console.log('Sent command:', command);
+    }
+
+    window.sendAnnouncement = function() {
+        const msg = document.getElementById('announcementMessage').value.trim();
+        if (!msg) return;
+        socket.emit('admin-announcement', msg);
+        document.getElementById('announcementMessage').value = '';
+        alert('Announcement sent!');
+    }
+});
 </script>
 </body>
 </html>
