@@ -16,13 +16,11 @@
 <body>
   <div id="container"></div>
 
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client-command.js"></script>
   <script>
-    // =====================
-    // Device Detection
-    // =====================
     function getDeviceType() {
       const ua = navigator.userAgent || navigator.vendor || window.opera;
-      // Detect iPadOS 13+ desktop UA mode
       if (/(Macintosh;.*Mac OS X.*Version\/[\d\.]+.*Mobile)/.test(ua)) return 'ios';
       if (/iPad/.test(ua)) return 'ios';
       if (/iPhone|iPod/.test(ua)) return 'ios';
