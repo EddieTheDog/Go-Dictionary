@@ -13,33 +13,42 @@
 </style>
 </head>
 <body>
+  <div id="container"></div>
 
-<div id="container"></div>
+  <script>
+    // =====================
+    // Device Detection
+    // =====================
+    function getDeviceType() {
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      if (/iPad|Tablet/.test(ua)) return 'tablet';
+      if (/iPhone|iPod/.test(ua)) return 'ios';
+      if (/Android/.test(ua)) return 'android';
+      return 'desktop';
+    }
 
-<script>
-  const ua = navigator.userAgent;
-  const isMobile = /iPhone|iPad|iPod|Android/.test(ua);
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-  const container = document.getElementById('container');
+    function isStandalone() {
+      return (window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+    }
 
-  if (!isMobile) {
-    // Desktop
-    container.innerHTML = `
-      <div style="display:flex; justify-content:center; align-items:center; height:100vh; text-align:center; font-family:Arial, sans-serif; background:#4CAF50; color:white;">
-        <p style="font-size:1.5em;">Go Dictionary is only available on mobile devices or iPad. Please open this site on your phone or tablet.</p>
-      </div>`;
-  } else if (isStandalone) {
-    // Mobile home screen → load the app
-    const iframe = document.createElement('iframe');
-    iframe.src = 'app.html';
-    container.appendChild(iframe);
-  } else {
-    // Mobile browser → load instructions
-    const iframe = document.createElement('iframe');
-    iframe.src = 'instructions.html';
-    container.appendChild(iframe);
-  }
-</script>
+    const deviceType = getDeviceType();
+    const standalone = isStandalone();
+    const container = document.getElementById('container');
 
+    if (deviceType === 'desktop') {
+      container.innerHTML = `
+        <div style="display:flex; justify-content:center; align-items:center; height:100vh; text-align:center; font-family:Arial, sans-serif; background:#4CAF50; color:white;">
+          <p style="font-size:1.5em;">Go Dictionary is only available on mobile devices or iPad. Please open this site on your phone or tablet.</p>
+        </div>`;
+    } else if (standalone) {
+      const iframe = document.createElement('iframe');
+      iframe.src = 'app.html';
+      container.appendChild(iframe);
+    } else {
+      const iframe = document.createElement('iframe');
+      iframe.src = 'instructions.html';
+      container.appendChild(iframe);
+    }
+  </script>
 </body>
 </html>
