@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#4CAF50">
@@ -21,7 +22,9 @@
     // =====================
     function getDeviceType() {
       const ua = navigator.userAgent || navigator.vendor || window.opera;
-      if (/iPad|Tablet/.test(ua)) return 'tablet';
+      // Detect iPadOS 13+ desktop UA mode
+      if (/(Macintosh;.*Mac OS X.*Version\/[\d\.]+.*Mobile)/.test(ua)) return 'ios';
+      if (/iPad/.test(ua)) return 'ios';
       if (/iPhone|iPod/.test(ua)) return 'ios';
       if (/Android/.test(ua)) return 'android';
       return 'desktop';
